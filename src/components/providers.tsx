@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { ToastProvider } from './providers/toast-provider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -9,6 +10,7 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <>
+      <ToastProvider />
       {children}
     </>
   );
