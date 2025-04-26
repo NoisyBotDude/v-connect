@@ -2,16 +2,24 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PostCard } from '@/components/feed/post-card';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import mockData from '@/data/mock-feed.json';
 import { type Post } from '@/types/feed';
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
+const stagger = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>(mockData.posts);
@@ -58,34 +66,56 @@ export default function FeedPage() {
   };
 
   const handleShare = (postId: string) => {
-    // In a real app, this would open a share dialog
     toast.success('Share dialog opened!');
   };
 
   const handleReport = (postId: string) => {
-    // In a real app, this would open a report dialog
     toast.success('Report submitted!');
   };
 
-  return (
-    <div className="container py-6">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {/* Left Sidebar */}
+  if (posts.length === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-12"
+      >
+        <h2 className="text-2xl font-semibold mb-2">No Posts Yet</h2>
+        <p className="text-muted-foreground">
+          Be the first one to create a post!
+        </p>
+      </motion.div>
+    );
+  }
 
-        {/* Main Feed */}
-        <div className="space-y-6 md:col-span-6">
-          {posts.map((post) => (
+  return (
+    <motion.div
+      variants={stagger}
+      initial="initial"
+      animate="animate"
+      className="space-y-6"
+    >
+      <AnimatePresence mode="popLayout">
+        {posts.map((post) => (
+          <motion.div
+            key={post.id}
+            variants={fadeInUp}
+            layout
+            layoutId={post.id}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
             <PostCard
-              key={post.id}
               post={post}
               onLike={handleLike}
               onComment={handleComment}
               onShare={handleShare}
               onReport={handleReport}
             />
-          ))}
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 } 

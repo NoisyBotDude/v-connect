@@ -14,10 +14,13 @@ import {
   Search,
   MapPin,
   SlidersHorizontal,
+  Tag,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
@@ -26,6 +29,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 const feedTabs = [
   {
@@ -57,16 +66,17 @@ const feedTabs = [
 
 const sortOptions = [
   { label: 'Latest', value: 'latest', icon: Clock },
-  { label: 'Popular', value: 'popular', icon: TrendingUp },
+  { label: 'Trending', value: 'trending', icon: TrendingUp },
   { label: 'Most Liked', value: 'most-liked', icon: Star },
 ];
 
-const categoryFilters = [
-  { label: 'Academic', value: 'academic' },
-  { label: 'Sports', value: 'sports' },
-  { label: 'Cultural', value: 'cultural' },
-  { label: 'Technical', value: 'technical' },
-  { label: 'Others', value: 'others' },
+const categories = [
+  'Academic',
+  'Sports',
+  'Cultural',
+  'Technical',
+  'Social',
+  'Others',
 ];
 
 export default function FeedLayout({
@@ -76,7 +86,8 @@ export default function FeedLayout({
 }) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const pathname = usePathname();
-  const [sortBy, setSortBy] = useState('latest');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSort, setSelectedSort] = useState('latest');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const toggleCategory = (category: string) => {
@@ -94,20 +105,22 @@ export default function FeedLayout({
         <div className="container max-w-7xl mx-auto">
           <div className="py-4 space-y-4 md:space-y-0">
             {/* Top Bar */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row md:items-center justify-between gap-4">
               <div className="w-full md:w-auto md:flex-1 md:max-w-md">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search posts..."
-                    className="pl-9 w-full"
+                    className="pl-9"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="flex items-center gap-2 justify-end">
+              <div className="flex items-center gap-2">
                 <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
+                    <Button variant="outline" size="icon">
                       <SlidersHorizontal className="h-4 w-4" />
                     </Button>
                   </SheetTrigger>
@@ -119,17 +132,21 @@ export default function FeedLayout({
                       </SheetDescription>
                     </SheetHeader>
                     <div className="py-6 space-y-6">
-                      <div>
-                        <h3 className="text-sm font-medium mb-3">Sort By</h3>
+                      {/* Sort Options */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-medium flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4" />
+                          Sort By
+                        </h3>
                         <div className="space-y-2">
                           {sortOptions.map((option) => {
                             const Icon = option.icon;
                             return (
                               <Button
                                 key={option.value}
-                                variant={sortBy === option.value ? "default" : "ghost"}
-                                className="w-full justify-start"
-                                onClick={() => setSortBy(option.value)}
+                                variant={selectedSort === option.value ? "default" : "ghost"}
+                                className="w-full justify-start text-sm"
+                                onClick={() => setSelectedSort(option.value)}
                               >
                                 <Icon className="h-4 w-4 mr-2" />
                                 {option.label}
@@ -138,21 +155,38 @@ export default function FeedLayout({
                           })}
                         </div>
                       </div>
-                      <div>
-                        <h3 className="text-sm font-medium mb-3">Categories</h3>
+
+                      <Separator />
+
+                      {/* Categories */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-medium flex items-center gap-2">
+                          <Tag className="h-4 w-4" />
+                          Categories
+                        </h3>
                         <div className="flex flex-wrap gap-2">
-                          {categoryFilters.map((category) => (
-                            <Button
-                              key={category.value}
-                              variant={selectedCategories.includes(category.value) ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => toggleCategory(category.value)}
+                          {categories.map((category) => (
+                            <Badge
+                              key={category}
+                              variant={selectedCategories.includes(category) ? "default" : "outline"}
+                              className="cursor-pointer hover:bg-primary/90 transition-colors"
+                              onClick={() => toggleCategory(category)}
                             >
-                              {category.label}
-                            </Button>
+                              {category}
+                            </Badge>
                           ))}
                         </div>
                       </div>
+
+                      {selectedCategories.length > 0 && (
+                        <Button
+                          variant="ghost"
+                          className="w-full text-sm"
+                          onClick={() => setSelectedCategories([])}
+                        >
+                          Clear Filters
+                        </Button>
+                      )}
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -194,13 +228,15 @@ export default function FeedLayout({
 
       {/* Feed Content */}
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 py-6">
-          {/* Quick Links - Left Sidebar */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Left Sidebar - Quick Links */}
           <div className="hidden lg:block lg:col-span-2">
             <div className="sticky top-[5.5rem] space-y-4">
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <h3 className="font-medium mb-3">Quick Links</h3>
-                <div className="space-y-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Quick Links</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
                   <Button variant="ghost" className="w-full justify-start text-sm">
                     My Profile
                   </Button>
@@ -210,8 +246,8 @@ export default function FeedLayout({
                   <Button variant="ghost" className="w-full justify-start text-sm">
                     My Clubs
                   </Button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
@@ -220,12 +256,14 @@ export default function FeedLayout({
             {children}
           </main>
 
-          {/* Upcoming Events - Right Sidebar */}
+          {/* Right Sidebar - Upcoming Events */}
           <div className="hidden lg:block lg:col-span-3">
             <div className="sticky top-[5.5rem] space-y-4">
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <h3 className="font-medium mb-3">Upcoming Events</h3>
-                <div className="space-y-3">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Upcoming Events</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   <div className="text-sm">
                     <p className="font-medium">Tech Fest 2024</p>
                     <p className="text-muted-foreground">March 15, 2024</p>
@@ -234,8 +272,8 @@ export default function FeedLayout({
                     <p className="font-medium">Cultural Night</p>
                     <p className="text-muted-foreground">March 20, 2024</p>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

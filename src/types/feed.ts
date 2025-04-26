@@ -8,22 +8,30 @@ export interface Author {
 
 export interface Comment {
   id: string;
-  author: Author;
+  author: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
   content: string;
   timestamp: string;
 }
 
 export interface Post {
   id: string;
-  author: Author;
+  author: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
   content: string;
   images?: string[];
   likes: number;
+  isLiked: boolean;
   comments: Comment[];
   timestamp: string;
-  isLiked: boolean;
   isAnnouncement?: boolean;
-  isLostFound?: boolean;
+  categories?: string[];
 }
 
 export interface FeedData {

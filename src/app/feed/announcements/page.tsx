@@ -2,9 +2,24 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PostCard } from '@/components/feed/post-card';
 import mockData from '@/data/mock-feed.json';
 import { type Post } from '@/types/feed';
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
+const stagger = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function AnnouncementsPage() {
   const [posts, setPosts] = useState<Post[]>(
@@ -62,27 +77,47 @@ export default function AnnouncementsPage() {
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-12">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-12"
+      >
         <h2 className="text-2xl font-semibold mb-2">No Announcements</h2>
         <p className="text-muted-foreground">
           There are no announcements at the moment.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          onLike={handleLike}
-          onComment={handleComment}
-          onShare={handleShare}
-          onReport={handleReport}
-        />
-      ))}
-    </div>
+    <motion.div
+      variants={stagger}
+      initial="initial"
+      animate="animate"
+      className="max-w-2xl mx-auto space-y-6"
+    >
+      <AnimatePresence mode="popLayout">
+        {posts.map((post) => (
+          <motion.div
+            key={post.id}
+            variants={fadeInUp}
+            layout
+            layoutId={post.id}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <PostCard
+              post={post}
+              onLike={handleLike}
+              onComment={handleComment}
+              onShare={handleShare}
+              onReport={handleReport}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 } 
