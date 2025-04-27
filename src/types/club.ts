@@ -71,26 +71,69 @@ export interface Club {
   description: string;
   logo: string;
   coverImage: string;
-  template: ClubTemplate;
+  template: "modern" | "creative" | "minimal";
   category: string;
   established: string;
-  socialLinks?: {
-    instagram?: string;
-    facebook?: string;
-    twitter?: string;
-    linkedin?: string;
+  socialLinks: {
     website?: string;
+    instagram?: string;
+    linkedin?: string;
+    facebook?: string;
   };
   contact: {
     email: string;
-    phone?: string;
-    location?: string;
+    location: string;
   };
-  members: ClubMember[];
-  events: ClubEvent[];
-  achievements: ClubAchievement[];
-  gallery: ClubGalleryItem[];
-  announcements: ClubAnnouncement[];
+  members: {
+    id: string;
+    name: string;
+    avatar: string;
+    role: "admin" | "moderator" | "member";
+    joinedAt: string;
+    department: string;
+    year: number;
+  }[];
+  events: {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    endDate: string;
+    location: string;
+    image: string;
+    registrationLink: string;
+    registrationDeadline: string;
+    attendees: number;
+    maxAttendees: number;
+    status: "upcoming" | "ongoing" | "completed" | "cancelled";
+  }[];
+  achievements: {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    image: string;
+  }[];
+  gallery: {
+    id: string;
+    title: string;
+    image: string;
+    type: "image" | "video";
+    date: string;
+  }[];
+  announcements: {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+    author: {
+      id: string;
+      name: string;
+      avatar: string;
+      role: "admin" | "moderator" | "member";
+    };
+    priority: "low" | "medium" | "high";
+  }[];
   features: {
     enableEvents: boolean;
     enableGallery: boolean;
