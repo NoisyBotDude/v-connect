@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import mockData from '@/data/mock-events.json';
+import Image from 'next/image';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -94,7 +95,7 @@ export default function EventsPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <img
+                  <Image
                     src={event.image}
                     alt={event.title}
                     className="w-full h-48 object-cover"
@@ -102,7 +103,7 @@ export default function EventsPage() {
                 </motion.div>
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
-                    <img
+                    <Image
                       src={event.club.logo}
                       alt={event.club.name}
                       className="w-8 h-8 rounded-full"

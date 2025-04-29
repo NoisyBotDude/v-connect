@@ -84,7 +84,7 @@ export default function LoginPage() {
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Button variant="link" className="px-0" asChild>
               <Link href={`/signup?type=${userType}`}>
                 Sign up

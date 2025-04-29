@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import mockData from '@/data/mock-lost-found.json';
+import Image from 'next/image';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -99,7 +100,7 @@ export default function LostAndFoundPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.title}
                       className="w-full h-48 object-cover rounded-t-lg"

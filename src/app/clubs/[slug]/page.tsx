@@ -106,7 +106,7 @@ export default function ClubPage({ params }: ClubPageProps) {
                   <div className="text-xs text-muted-foreground">Achievements</div>
                 </div>
                 <div className="rounded-lg border p-4 text-center">
-                  <Image className="h-5 w-5 mx-auto mb-2 text-primary" />
+                  <Image alt="" src={club.gallery[0].image} width={100} height={100} className="h-5 w-5 mx-auto mb-2 text-primary" />
                   <div className="text-2xl font-bold">{club.gallery.length}</div>
                   <div className="text-xs text-muted-foreground">Gallery Items</div>
                 </div>

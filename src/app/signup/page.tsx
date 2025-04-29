@@ -62,7 +62,9 @@ export default function SignupPage() {
       // TODO: Implement student signup
       console.log(data);
       toast.success('Account created successfully!');
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
@@ -75,7 +77,9 @@ export default function SignupPage() {
       // TODO: Implement institute signup
       console.log(data);
       toast.success('Account created successfully!');
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);

@@ -1,16 +1,10 @@
 "use client"
 
-import { Metadata } from "next"
 import { mockClubs } from "@/data/mock-clubs"
 import { ClubCard } from "@/components/clubs/club-card"
 import { ClubsHeader } from "@/components/clubs/clubs-header"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
-
-// export const metadata: Metadata = {
-//   title: "Clubs & Societies",
-//   description: "Discover and join various clubs and societies at your university",
-// }
 
 function ClubCardSkeleton() {
   return (

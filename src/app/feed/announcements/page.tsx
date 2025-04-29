@@ -67,11 +67,11 @@ export default function AnnouncementsPage() {
     toast.success('Comment added!');
   };
 
-  const handleShare = (postId: string) => {
+  const handleShare = () => {
     toast.success('Share dialog opened!');
   };
 
-  const handleReport = (postId: string) => {
+  const handleReport = () => {
     toast.success('Report submitted!');
   };
 
