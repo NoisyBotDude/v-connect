@@ -1,5 +1,6 @@
+"use client"
+
 import { notFound } from "next/navigation"
-import { Metadata } from "next"
 import Image from "next/image"
 import { mockClubs } from "@/data/mock-clubs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,25 +32,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-interface ClubPageProps {
-  params: {
-    slug: string
-  }
-}
 
-export async function generateMetadata({ params }: ClubPageProps): Promise<Metadata> {
+export default async function Page({ params }: { params: { slug: string } }) {
   const club = mockClubs.find((c) => c.slug === params.slug)
-  if (!club) return {}
-
-  return {
-    title: club.name,
-    description: club.description,
-  }
-}
-
-export default function ClubPage({ params }: ClubPageProps) {
-  const club = mockClubs.find((c) => c.slug === params.slug)
-  if (!club) return notFound()
+  if (!club) notFound()
 
   return (
     <main className="min-h-screen bg-background pb-12">
@@ -182,7 +168,7 @@ export default function ClubPage({ params }: ClubPageProps) {
 
         {/* Tabs */}
         <div className="mt-8">
-          <ScrollArea className="w-full" orientation="horizontal">
+          <ScrollArea className="w-full">
             <Tabs defaultValue="events" className="space-y-8">
               <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1">
                 <TabsTrigger value="events" className="rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
